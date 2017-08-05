@@ -38,6 +38,14 @@ var DEALER_LIBRARY = [
 	9,9,9,9,
 	10,10,10,10
 ]
+var PLAYER_LIBRARY = [
+	1, -1,
+	2, -2,
+	3, -3,
+	4, -4,
+	5, -5,
+	6, -6
+]
 //Fisher-Yates shuffle
 function shuffle(a){
 	a = a.slice(); //creating a copy of the original array
@@ -90,10 +98,14 @@ function gameController(gameState, action){
 		case 'init': {
 			var newGameState = {
 				dealerDeck: shuffle(DEALER_LIBRARY), //deck cards are delt from
-				playerDeck: [], //deck player hand is delt from
+				playerDeck: shuffle(PLAYER_LIBRARY), //deck player hand is delt from
 				playerTable: [], //what's on the table
 				playerHand: [], //what's in the player hand
 				total: 0,
+			};
+			for (i = 3; i >= 0; i--){
+				var card = newGameState.playerDeck.pop();
+				newGameState.playerHand.push(card);
 			};
 			return newGameState;
 		}
@@ -102,6 +114,10 @@ function gameController(gameState, action){
 			let card = newGameState.dealerDeck.pop();
 			newGameState.playerTable.push(card);
 			newGameState.total = newGameState.total + card;
+			return newGameState;
+		}
+		case 'action' {
+			var newGameState = copyGameState(gameState);
 			return newGameState;
 		}
 		case 'stand': {
