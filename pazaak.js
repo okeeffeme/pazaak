@@ -32,7 +32,7 @@ function shuffle(a){
 	}
 	return a;
 }
-//copy the game state
+//Copy the game state
 function copyGameState(oldState){
 	var copiedState = {
 		dealerDeck: oldState.dealerDeck.slice(),
@@ -44,8 +44,7 @@ function copyGameState(oldState){
 	}
 	return copiedState;
 }
-
-//check the round count
+//Check the round count
 function checkRound(gameState){
 	if (gameState.round === null) {
 		return 0;
@@ -67,17 +66,60 @@ function gameTest(){
 	gameState = gameController(gameState, 'deal');
 	console.log("gameTest deal !!!  turn is " + gameState.turn);
 	gameState = gameController(gameState, 'deal');
-	//gameState.total = 20;
+	gameState.total = 20;
 	gameState = gameController(gameState, 'stand');
-	console.log("The score is " + gameState.total);
+	console.log("The final score is " + gameState.total);
 }
 
 // model
 // The model is the gamestate
-//var gameState;
+var gameState;
 
 
 // view
+function buttonReset(){
+	gameState = gameController(null, 'init');
+	gameState = gameController(gameState, 'deal')
+	updateDisplay();
+}
+
+window.onload = buttonReset();
+
+function buttonDeal() {
+	gameState = gameController(gameState, 'deal');
+	console.log("deal button clicked");
+	updateDisplay();
+}
+
+function buttonStand() {
+	gameState = gameController(gameState, 'stand');
+	updateDisplay();
+}
+
+function button1() {
+	gameState = gameController(gameState, 'playerAction0');
+	updateDisplay();
+}
+function button2() {
+	gameState = gameController(gameState, 'playerAction1');
+	updateDisplay();
+}
+function button3() {
+	gameState = gameController(gameState, 'playerAction2');
+	updateDisplay();
+}
+function button4() {
+	gameState = gameController(gameState, 'playerAction3');
+	updateDisplay();
+}
+function updateDisplay() {
+	document.getElementById('display').innerHTML = gameState.playerTable;
+	document.getElementById('total').innerHTML = gameState.total;
+	document.getElementById('pc0').innerHTML = gameState.playerHand[0];
+	document.getElementById('pc1').innerHTML = gameState.playerHand[1];
+	document.getElementById('pc2').innerHTML = gameState.playerHand[2];
+	document.getElementById('pc3').innerHTML = gameState.playerHand[3];
+}
 
 //controller
 // The controller is the reducer
@@ -176,7 +218,8 @@ function playAction(gameState, action){
 function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
 		alert("YAY");
-	} else if (gameState.turn === 9 && gameState.total != 20) {
+	} else if (gameState.turn === 6 && gameState.total != 20) {
+		//traditional turn limit is 9 - changing to 6 for single player
 		alert("SAD");
 	} else {
 		console.log(gameState);
