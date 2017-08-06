@@ -25,6 +25,7 @@ function playGame(){
 }
 
 playGame();
+
 //this looks so wrong
 var DEALER_LIBRARY = [
 	1,1,1,1,
@@ -71,15 +72,35 @@ function copyGameState(oldState){
 	return copiedState;
 }
 
+//check the round count
+function checkRound(gameState){
+	if (gameState.round === null) {
+		return 0;
+	} else if (gameState.round > 0 && gameState.round < 3) {
+		return gameState.round;
+	} else {
+		return 0;
+	}
+}
+
+//
+// GAME TEST //
+//
+
 function gameTest(){
-	var gameState = gameController(null, 'init');
+	var gameState = playAction(null, 'init');
 	console.log("init");
-	gameState = gameController(gameState, 'deal');
-	gameState = gameController(gameState, 'deal');
-	gameState = gameController(gameState, 'deal');
-	console.log("deal 3");
-	gameState = gameController(gameState, 'stand');
-	console.log("total");
+	console.log("This is round " + gameState.round);
+	gameState = playAction(gameState, 'deal');
+	gameState = playAction(gameState, 'deal');
+	gameState = playAction(gameState, 'deal');
+	gameState = playAction(gameState, 'deal');
+	console.log("deal 4");
+	console.log("the total is " + gameState.total);
+	console.log("the player will now play " + gameState.playerHand[0]);
+	gameState = playAction(gameState, 'playerAction0');
+	console.log("total is now " + gameState.total);
+	gameState = playAction(gameState, 'playerAction0');
 	console.log(gameState);
 }
 
@@ -91,7 +112,7 @@ function gameTest(){
 
 //controller
 // The controller is the reducer
-function gameController(gameState, action){
+function playAction(gameState, action){
 	switch (action) {
 		default:
 			throw new Error("Whoops");
@@ -102,6 +123,7 @@ function gameController(gameState, action){
 				playerTable: [], //what's on the table
 				playerHand: [], //what's in the player hand
 				total: 0,
+				// round: checkRound(gameState)
 			};
 			for (i = 3; i >= 0; i--){
 				var card = newGameState.playerDeck.pop();
@@ -116,18 +138,70 @@ function gameController(gameState, action){
 			newGameState.total = newGameState.total + card;
 			return newGameState;
 		}
-		case 'action' {
+		case 'playerAction0': {
 			var newGameState = copyGameState(gameState);
+			if (newGameState.playerHand[0] != null) {
+				newGameState.playerTable.push(newGameState.playerHand[0]);
+				newGameState.total += newGameState.playerHand[0];
+				newGameState.playerHand[0] = null;
+			} else {
+				console.log("Illegal move; cannot play same card twice");
+			}
+			return newGameState;
+		}
+		case 'playerAction1': {
+			var newGameState = copyGameState(gameState);
+			if (newGameState.playerHand[1] != null) {
+				newGameState.playerTable.push(newGameState.playerHand[1]);
+				newGameState.total += newGameState.playerHand[1];
+				newGameState.playerHand[1] = null;
+			} else {
+				console.log("Illegal move; cannot play same card twice");
+			}
+			return newGameState;
+		}
+		case 'playerAction2': {
+			var newGameState = copyGameState(gameState);
+			if (newGameState.playerHand[2] != null) {
+				newGameState.playerTable.push(newGameState.playerHand[2]);
+				newGameState.total += newGameState.playerHand[2];
+				newGameState.playerHand[2] = null;
+			} else {
+				console.log("Illegal move; cannot play same card twice");
+			}
+			return newGameState;
+		}
+		case 'playerAction3': {
+			var newGameState = copyGameState(gameState);
+			if (newGameState.playerHand[3] != null) {
+				newGameState.playerTable.push(newGameState.playerHand[3]);
+				newGameState.total += newGameState.playerHand[3];
+				newGameState.playerHand[3] = null;
+			} else {
+				console.log("Illegal move; cannot play same card twice");
+			}
 			return newGameState;
 		}
 		case 'stand': {
 			var newGameState = copyGameState(gameState);
-			if (newGameState.total === 20) {
-				alert("YAY");
-			} else {
-				alert("SAD");
-			}
 			return newGameState;
 		}
 	}
+}
+
+function checkVictoryCondition(gameState) {
+	if (gameState.total === 20) {
+		alert("YAY");
+	} else {
+		alert("SAD");
+	}
+	return gameState;
+}
+
+function gameController (gameState, action) {
+	return checkVictoryCondition(
+		playAction(
+			state, action
+		)
+	);
 }
