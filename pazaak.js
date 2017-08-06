@@ -55,28 +55,12 @@ function checkRound(gameState){
 	}
 }
 
-//
-// GAME TEST //
-//
-
-function gameTest(){
-	console.log("gameTest init !!!");
-	var gameState = gameController(null, 'init');
-	console.log("gameTest deal !!!  turn is " + gameState.turn);
-	gameState = gameController(gameState, 'deal');
-	console.log("gameTest deal !!!  turn is " + gameState.turn);
-	gameState = gameController(gameState, 'deal');
-	gameState.total = 20;
-	gameState = gameController(gameState, 'stand');
-	console.log("The final score is " + gameState.total);
-}
-
 // model
 // The model is the gamestate
 var gameState;
 var playerSettings;
 var flag;
-
+var turnLimit = 5; 	// traditional turn limit is 9 - changing to 5 for single player
 
 // view
 function buttonReset(){
@@ -235,7 +219,7 @@ function playAction(gameState, action){
 // Forces the game to end, but gameController will still check for victory condition
 		case 'stand': {
 			var newGameState = copyGameState(gameState);
-			newGameState.turn = 5; // change on bot creation
+			newGameState.turn = turnLimit;
 			return newGameState;
 		}
 	}
@@ -247,9 +231,7 @@ function checkVictoryCondition(gameState) {
 		playerSettings.playerWins += 1;
 		alert("You've won " + playerSettings.playerWins + " games");
 		flag = 1;
-	} else if (gameState.turn >= 5 && gameState.total != 20) {
-	// traditional turn limit is 9 - changing to 5 for single player
-	// change on bot creation
+	} else if (gameState.turn >= turnLimit && gameState.total != 20) {
 		playerSettings.playerLosses += 1;
 		alert("You've lost " + playerSettings.playerLosses + " games");
 		flag = 1;
