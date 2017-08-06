@@ -74,16 +74,22 @@ function gameTest(){
 // model
 // The model is the gamestate
 var gameState;
+var playerSettings;
+var flag;
 
 
 // view
 function buttonReset(){
+	flag = 0; //ugh - still looking at better handling for this
 	gameState = gameController(null, 'init');
-	gameState = gameController(gameState, 'deal')
+	gameState = gameController(gameState, 'deal');
 	updateDisplay();
 }
-
+function playerReset(){
+	playerSettings = playerSettings(playerSettings, 'setup');
+}
 window.onload = buttonReset();
+window.onload = playerReset();
 
 function buttonDeal() {
 	gameState = gameController(gameState, 'deal');
@@ -123,10 +129,25 @@ function updateDisplay() {
 
 //controller
 // The controller is the reducer
+function playerSettings(player, action){
+	switch (action) {
+		default:
+			throw new Error("Player Settings Error");
+		case 'setup': {
+			var newPlayerSettings = {
+				playerWins: 0,
+				playerLosses: 0,
+				playerGameTotal: 0,
+			}
+			return newPlayerSettings;
+		}
+	}
+}
+
 function playAction(gameState, action){
 	switch (action) {
 		default:
-			throw new Error("Whoops");
+			throw new Error("Player Action Error");
 // Initialize round - nothing exists before this runs
 		case 'init': {
 			var newGameState = {
@@ -209,7 +230,7 @@ function playAction(gameState, action){
 // Forces the game to end, but gameController will still check for victory condition
 		case 'stand': {
 			var newGameState = copyGameState(gameState);
-			newGameState.turn = 9;
+			newGameState.turn = 5; // change on bot creation
 			return newGameState;
 		}
 	}
@@ -217,23 +238,32 @@ function playAction(gameState, action){
 
 function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
-		alert("YAY");
-	} else if (gameState.turn === 6 && gameState.total != 20) {
-		//traditional turn limit is 9 - changing to 6 for single player
-		alert("SAD");
+		playerSettings.playerWins += 1;
+		alert("You've won " + playerSettings.playerWins + " games");
+		flag = 1;
+	} else if (gameState.turn >= 5 && gameState.total != 20) {
+		//traditional turn limit is 9 - changing to 5 for single player
+		// change on bot creation
+		playerSettings.playerLosses += 1;
+		alert("You've lost " + playerSettings.playerLosses + " games");
+		flag = 1;
 	} else {
 		console.log(gameState);
-		console.log("victorycheck ran");
+		console.log("victorycheck ran !!!");
 	}
 	console.log("returning gameState ---");
 	return gameState;
 }
 
 function gameController(gameState, action) {
+	if (!flag){
 		console.log("the game runs " + action + " ***");
 		return checkVictoryCondition(
 			playAction(
 				gameState, action
 			)
 		);
+	} else {
+		return gameState;
+	}
 }
