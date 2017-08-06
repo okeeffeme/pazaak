@@ -1,0 +1,28 @@
+html, body {
+  margin: 10%;
+  padding: 0;
+	background-color: #eee;
+	font-family: 'Roboto', 'Arial', sans-serif;
+}
+
+button {
+	background-color: #dbdbdb;
+	vertical-align: middle;
+	outline: none;
+	border: none;
+}
+button:disabled {
+	color: #eee;
+}
+
+button.action {
+	margin-right: 10px;
+}
+
+button.playerHand {
+	min-width: 24px;
+	min-height: 40px;
+	margin: 10px 10px 10px 0;
+	padding: 4px;
+	text-align: center;
+}

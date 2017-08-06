@@ -1,17 +1,32 @@
-<div>
-<h1 id="display"></h1>
-<h2>Total</h2>
-<h2 id="total"></h2>
-</div>
-<div>
-<button id="deal" onclick="buttonDeal();">Deal</button>
-<button id="stand" onclick="buttonStand();">Stand</button>
-<button id="reset" onclick="buttonReset();">New Game</button>
-<div>
-<div>
-	<button id="pc0" onclick="button1();">Card 1</button>
-	<button id="pc1" onclick="button2();">Card 2</button>
-	<button id="pc2" onclick="button3();">Card 3</button>
-	<button id="pc3" onclick="button4();">Card 4</button>
-</div>
-<script src="pazaak.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="robots" content="noindex,nofollow">
+		<meta name="googlebot" content="noindex,nofollow,nosnippet,noarchive">
+    <title>Pazaak</title>
+
+		<style>@import url('https://fonts.googleapis.com/css?family=Roboto');</style>
+		<link rel="stylesheet" href="style.css" />
+  </head>
+	<body>
+		<div>
+			<h1 id="display"></h1>
+			<h2>Total: <span id="total"></span></h2>
+		</div>
+		<div>
+			<button id="deal" class="action" onclick="buttonDeal();">Deal</button>
+			<!--button id="stand" class="action" onclick="buttonStand();">Stand</button-->
+			<button id="reset" class="action" onclick="buttonReset();">New Game</button>
+		<div>
+		<div>
+			<button id="pc0" class="playerHand" onclick="button1();">Card 1</button>
+			<button id="pc1" class="playerHand" onclick="button2();">Card 2</button>
+			<button id="pc2" class="playerHand" onclick="button3();">Card 3</button>
+			<button id="pc3" class="playerHand" onclick="button4();">Card 4</button>
+		</div>
+		<script src="pazaak.js"></script>
+	</body>
+</html>

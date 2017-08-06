@@ -125,6 +125,11 @@ function updateDisplay() {
 	document.getElementById('pc1').innerHTML = gameState.playerHand[1];
 	document.getElementById('pc2').innerHTML = gameState.playerHand[2];
 	document.getElementById('pc3').innerHTML = gameState.playerHand[3];
+	if (!flag) {
+		document.getElementById('deal').disabled = false;
+	} else {
+		document.getElementById('deal').disabled = true;
+	}
 }
 
 //controller
@@ -238,16 +243,18 @@ function playAction(gameState, action){
 
 function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
+	//check to see if player won
 		playerSettings.playerWins += 1;
 		alert("You've won " + playerSettings.playerWins + " games");
 		flag = 1;
 	} else if (gameState.turn >= 5 && gameState.total != 20) {
-		//traditional turn limit is 9 - changing to 5 for single player
-		// change on bot creation
+	// traditional turn limit is 9 - changing to 5 for single player
+	// change on bot creation
 		playerSettings.playerLosses += 1;
 		alert("You've lost " + playerSettings.playerLosses + " games");
 		flag = 1;
 	} else {
+	// just checking
 		console.log(gameState);
 		console.log("victorycheck ran !!!");
 	}
@@ -264,6 +271,7 @@ function gameController(gameState, action) {
 			)
 		);
 	} else {
+		console.log('tried to click disabled bttn');
 		return gameState;
 	}
 }
