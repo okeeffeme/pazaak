@@ -1,31 +1,3 @@
-var min = 1;
-var max = 10;
-var card;
-
-function cardGen() {
-    return Math.floor(Math.random() * (max - min) + min);
-}
-
-function deal() {
-    return cardGen();
-}
-
-function updateWindow(id, a){
-	document.getElementById(id).innerHTML = a;
-}
-
-total = 0;
-
-function playGame(){
-	var card = deal();
-	total += card;
-	console.log(card);
-	updateWindow("display", (document.getElementById("display").innerHTML + " " + card));
-	updateWindow("total", total);
-}
-
-playGame();
-
 //this looks so wrong
 var DEALER_LIBRARY = [
 	1,1,1,1,
@@ -68,6 +40,7 @@ function copyGameState(oldState){
 		playerTable: oldState.playerTable.slice(),
 		playerHand: oldState.playerHand.slice(),
 		total: oldState.total,
+		turn: oldState.turn
 	}
 	return copiedState;
 }
@@ -87,32 +60,15 @@ function checkRound(gameState){
 // GAME TEST //
 //
 
-// function gameTest(){
-// 	var gameState = playAction(null, 'init');
-// 	console.log("init");
-// 	console.log("This is round " + gameState.round);
-// 	gameState = playAction(gameState, 'deal');
-// 	gameState = playAction(gameState, 'deal');
-// 	gameState = playAction(gameState, 'deal');
-// 	gameState = playAction(gameState, 'deal');
-// 	console.log("deal 4");
-// 	console.log("the total is " + gameState.total);
-// 	console.log("the player will now play " + gameState.playerHand[0]);
-// 	gameState = playAction(gameState, 'playerAction0');
-// 	console.log("total is now " + gameState.total);
-// 	gameState = playAction(gameState, 'playerAction0');
-// 	console.log(gameState);
-// }
-
 function gameTest(){
 	console.log("gameTest init !!!");
 	var gameState = gameController(null, 'init');
-	console.log("gameTest deal !!!");
+	console.log("gameTest deal !!!  turn is " + gameState.turn);
 	gameState = gameController(gameState, 'deal');
-	console.log("gameTest deal !!!");
+	console.log("gameTest deal !!!  turn is " + gameState.turn);
 	gameState = gameController(gameState, 'deal');
-	console.log("gameTest playerAction0 !!!");
-	gameState = gameController(gameState, 'playerAction0');
+	//gameState.total = 20;
+	gameState = gameController(gameState, 'stand');
 	console.log("The score is " + gameState.total);
 }
 
@@ -129,6 +85,7 @@ function playAction(gameState, action){
 	switch (action) {
 		default:
 			throw new Error("Whoops");
+// Initialize round - nothing exists before this runs
 		case 'init': {
 			var newGameState = {
 				dealerDeck: shuffle(DEALER_LIBRARY), //deck cards are delt from
@@ -136,6 +93,7 @@ function playAction(gameState, action){
 				playerTable: [], //what's on the table
 				playerHand: [], //what's in the player hand
 				total: 0,
+				turn: 0,
 				// round: checkRound(gameState)
 			};
 			for (i = 3; i >= 0; i--){
@@ -144,32 +102,39 @@ function playAction(gameState, action){
 			};
 			return newGameState;
 		}
+// Deals a card from dealerDeck to playerTable and ticks the turn counter by 1
 		case 'deal': {
 			var newGameState = copyGameState(gameState);
 			let card = newGameState.dealerDeck.pop();
 			newGameState.playerTable.push(card);
 			newGameState.total = newGameState.total + card;
 			console.log("delt card " + card);
+			newGameState.turn += 1;
 			return newGameState;
 		}
+// Plays first card from playerHand to playerTable and ticks counter by 1
 		case 'playerAction0': {
 			var newGameState = copyGameState(gameState);
 			if (newGameState.playerHand[0] != null) {
-				newGameState.playerTable.push(newGameState.playerHand[0]);
-				newGameState.total += newGameState.playerHand[0];
+				newGameState.playerTable.push(newGameState.playerHand[0]); //pushes value of index in playerHand to playerTable
+				newGameState.total += newGameState.playerHand[0]; //adds value to total REMOVE ON TABLE COUNT
 				console.log("Player card " + newGameState.playerHand[0]);
-				newGameState.playerHand[0] = null;
+				newGameState.playerHand[0] = null; //nullifies index value in playerHand
+				newGameState.turn += 1; //ticks counter
 			} else {
+				// prevents duplicate move, no counter tick
 				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
+// Duplicate of playerAction0, just a hardcoded index for simplicity here
 		case 'playerAction1': {
 			var newGameState = copyGameState(gameState);
 			if (newGameState.playerHand[1] != null) {
 				newGameState.playerTable.push(newGameState.playerHand[1]);
 				newGameState.total += newGameState.playerHand[1];
 				newGameState.playerHand[1] = null;
+				newGameState.turn += 1;
 			} else {
 				console.log("Illegal move; card has already been played");
 			}
@@ -181,6 +146,7 @@ function playAction(gameState, action){
 				newGameState.playerTable.push(newGameState.playerHand[2]);
 				newGameState.total += newGameState.playerHand[2];
 				newGameState.playerHand[2] = null;
+				newGameState.turn += 1;
 			} else {
 				console.log("Illegal move; card has already been played");
 			}
@@ -192,13 +158,16 @@ function playAction(gameState, action){
 				newGameState.playerTable.push(newGameState.playerHand[3]);
 				newGameState.total += newGameState.playerHand[3];
 				newGameState.playerHand[3] = null;
+				newGameState.turn += 1;
 			} else {
 				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
+// Forces the game to end, but gameController will still check for victory condition
 		case 'stand': {
 			var newGameState = copyGameState(gameState);
+			newGameState.turn = 9;
 			return newGameState;
 		}
 	}
@@ -207,6 +176,8 @@ function playAction(gameState, action){
 function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
 		alert("YAY");
+	} else if (gameState.turn === 9 && gameState.total != 20) {
+		alert("SAD");
 	} else {
 		console.log(gameState);
 		console.log("victorycheck ran");
@@ -216,10 +187,10 @@ function checkVictoryCondition(gameState) {
 }
 
 function gameController(gameState, action) {
-	console.log("the game runs " + action + " ***");
-	return checkVictoryCondition(
-		playAction(
-			gameState, action
-		)
-	);
+		console.log("the game runs " + action + " ***");
+		return checkVictoryCondition(
+			playAction(
+				gameState, action
+			)
+		);
 }
