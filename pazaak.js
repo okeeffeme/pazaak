@@ -87,25 +87,38 @@ function checkRound(gameState){
 // GAME TEST //
 //
 
+// function gameTest(){
+// 	var gameState = playAction(null, 'init');
+// 	console.log("init");
+// 	console.log("This is round " + gameState.round);
+// 	gameState = playAction(gameState, 'deal');
+// 	gameState = playAction(gameState, 'deal');
+// 	gameState = playAction(gameState, 'deal');
+// 	gameState = playAction(gameState, 'deal');
+// 	console.log("deal 4");
+// 	console.log("the total is " + gameState.total);
+// 	console.log("the player will now play " + gameState.playerHand[0]);
+// 	gameState = playAction(gameState, 'playerAction0');
+// 	console.log("total is now " + gameState.total);
+// 	gameState = playAction(gameState, 'playerAction0');
+// 	console.log(gameState);
+// }
+
 function gameTest(){
-	var gameState = playAction(null, 'init');
-	console.log("init");
-	console.log("This is round " + gameState.round);
-	gameState = playAction(gameState, 'deal');
-	gameState = playAction(gameState, 'deal');
-	gameState = playAction(gameState, 'deal');
-	gameState = playAction(gameState, 'deal');
-	console.log("deal 4");
-	console.log("the total is " + gameState.total);
-	console.log("the player will now play " + gameState.playerHand[0]);
-	gameState = playAction(gameState, 'playerAction0');
-	console.log("total is now " + gameState.total);
-	gameState = playAction(gameState, 'playerAction0');
-	console.log(gameState);
+	console.log("gameTest init !!!");
+	var gameState = gameController(null, 'init');
+	console.log("gameTest deal !!!");
+	gameState = gameController(gameState, 'deal');
+	console.log("gameTest deal !!!");
+	gameState = gameController(gameState, 'deal');
+	console.log("gameTest playerAction0 !!!");
+	gameState = gameController(gameState, 'playerAction0');
+	console.log("The score is " + gameState.total);
 }
 
 // model
 // The model is the gamestate
+//var gameState;
 
 
 // view
@@ -136,6 +149,7 @@ function playAction(gameState, action){
 			let card = newGameState.dealerDeck.pop();
 			newGameState.playerTable.push(card);
 			newGameState.total = newGameState.total + card;
+			console.log("delt card " + card);
 			return newGameState;
 		}
 		case 'playerAction0': {
@@ -143,9 +157,10 @@ function playAction(gameState, action){
 			if (newGameState.playerHand[0] != null) {
 				newGameState.playerTable.push(newGameState.playerHand[0]);
 				newGameState.total += newGameState.playerHand[0];
+				console.log("Player card " + newGameState.playerHand[0]);
 				newGameState.playerHand[0] = null;
 			} else {
-				console.log("Illegal move; cannot play same card twice");
+				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
@@ -156,7 +171,7 @@ function playAction(gameState, action){
 				newGameState.total += newGameState.playerHand[1];
 				newGameState.playerHand[1] = null;
 			} else {
-				console.log("Illegal move; cannot play same card twice");
+				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
@@ -167,7 +182,7 @@ function playAction(gameState, action){
 				newGameState.total += newGameState.playerHand[2];
 				newGameState.playerHand[2] = null;
 			} else {
-				console.log("Illegal move; cannot play same card twice");
+				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
@@ -178,7 +193,7 @@ function playAction(gameState, action){
 				newGameState.total += newGameState.playerHand[3];
 				newGameState.playerHand[3] = null;
 			} else {
-				console.log("Illegal move; cannot play same card twice");
+				console.log("Illegal move; card has already been played");
 			}
 			return newGameState;
 		}
@@ -193,15 +208,18 @@ function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
 		alert("YAY");
 	} else {
-		alert("SAD");
+		console.log(gameState);
+		console.log("victorycheck ran");
 	}
+	console.log("returning gameState ---");
 	return gameState;
 }
 
-function gameController (gameState, action) {
+function gameController(gameState, action) {
+	console.log("the game runs " + action + " ***");
 	return checkVictoryCondition(
 		playAction(
-			state, action
+			gameState, action
 		)
 	);
 }
