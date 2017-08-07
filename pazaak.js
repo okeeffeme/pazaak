@@ -54,13 +54,13 @@ function checkRound(gameState){
 		return 0;
 	}
 }
+var turnLimit = 5; 	// traditional turn limit is 9 - changing to 5 for single player
 
 // model
 // The model is the gamestate
 var gameState;
 var playerSettings;
 var flag;
-var turnLimit = 5; 	// traditional turn limit is 9 - changing to 5 for single player
 
 // view
 function buttonReset(){
@@ -72,6 +72,7 @@ function buttonReset(){
 function playerReset(){
 	playerSettings = playerSettings(playerSettings, 'setup');
 }
+
 window.onload = buttonReset();
 window.onload = playerReset();
 
@@ -81,6 +82,11 @@ function buttonDeal() {
 	updateDisplay();
 }
 
+function runBot() {
+	gameState = bot();
+	//console.log("deal button clicked");
+	updateDisplay();
+}
 function buttonStand() {
 	gameState = gameController(gameState, 'stand');
 	updateDisplay();
@@ -102,6 +108,7 @@ function button4() {
 	gameState = gameController(gameState, 'playerAction3');
 	updateDisplay();
 }
+
 function updateDisplay() {
 	document.getElementById('display').innerHTML = gameState.playerTable;
 	document.getElementById('total').innerHTML = gameState.total;
@@ -146,7 +153,6 @@ function playAction(gameState, action){
 				playerHand: [], //what's in the player hand
 				total: 0,
 				turn: 0,
-				// round: checkRound(gameState)
 			};
 			for (i = 3; i >= 0; i--){
 				var card = newGameState.playerDeck.pop();
@@ -255,5 +261,40 @@ function gameController(gameState, action) {
 	} else {
 		console.log('tried to click disabled bttn');
 		return gameState;
+	}
+}
+
+//
+// BOT //
+//
+function testHand(hand) {
+	for (i = 0; i < hand.length; i++) {
+		if (gameState.total + hand[i] === 20) {
+			console.log(gameState.total + ' + ' + i + " = 20");
+			console.log(i);
+			return i;
+		}
+	}
+}
+function evaluateHand() {
+	if (testHand(gameState.playerHand) < 4) {
+		console.log('running deal from hand');
+		var index = testHand(gameState.playerHand);
+		console.log(index);
+		return 'playerAction'+index;
+	} else {
+		console.log('running deal');
+		return 'deal';
+	}
+}
+function bot() {
+	if (gameState.total < 14) {
+		console.log('bot decides to deal @@@');
+		return gameController(gameState, 'deal');
+	} else {
+		console.log('bot decides to evaluate @@@');
+		var action = evaluateHand();
+		console.log('bot will ' + action + " @@@");
+		return gameController(gameState, action);
 	}
 }
