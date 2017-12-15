@@ -1,5 +1,5 @@
 html, body {
-  margin: 10%;
+  margin: 5%;
   padding: 0;
 	background-color: #eee;
 	font-family: 'Roboto', 'Arial', sans-serif;
@@ -25,4 +25,30 @@ button.playerHand {
 	margin: 10px 10px 10px 0;
 	padding: 4px;
 	text-align: center;
+}
+
+.grid {
+  height: calc(100vw/4);
+  min-height: 90px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-column-gap: 10px;
+  justify-content: space-between;
+  align-items: stretch;
+}
+.col {
+  background-color: white;
+  text-align: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3,1fr);
+  grid-template-areas:
+    ". . ."
+    ". e ."
+    ". . .";
+}
+.card {
+  grid-area: e;
+  margin: auto;
+  font-size: 3em;
 }

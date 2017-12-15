@@ -19,11 +19,6 @@ var PLAYER_LIBRARY = [
 	5, -5,
 	6, -6
 ]
-var PLAYER_SETTINGS = {
-	playerWins: 0,
-	playerLosses: 0,
-	playerGameTotal: 0
-}
 //Fisher-Yates shuffle
 function shuffle(a){
 	a = a.slice(); //creating a copy of the original array
@@ -115,8 +110,52 @@ function button4() {
 	updateDisplay();
 }
 
+// let a = b || c || d || e || f;
+//
+// let a;
+// if(b){
+// 	a = b;
+// } else if (c) {
+// 	a = c;
+// } else if (d) {
+//
+// }
+//
+//
+// let a = b && c;
+//
+// let a;
+// if(b) {
+// 	a = c;
+// } else {
+// 	a = b;
+// }
+//
+// let a;
+//
+// if(isString(b)) {
+// 	a = b;
+// } else if(isObject(b) && isString(b.id)) {
+// 	a = b.id;
+// } else {
+// 	a = null;
+// }
+//
+// const a = undefined || null || '' || 0 || false || 'done!';
+//
+// const a =
+// 	(isString(b) ? b : null) ||
+// 	(isObject(b) && isString(b.id) ? b.id : null) ||
+// 	null;
+//
+
 function updateDisplay() {
-	document.getElementById('display').innerHTML = gameState.playerTable;
+	//document.getElementById('display').innerHTML = gameState.playerTable;
+	//the below can only work if 0 is not a card value
+	//else evaluate as shown above
+	document.getElementById('card_1').innerHTML = gameState.playerTable[0] || ''; 	document.getElementById('card_2').innerHTML = gameState.playerTable[1] || '';
+	document.getElementById('card_3').innerHTML = gameState.playerTable[2] || '';
+	document.getElementById('card_4').innerHTML = gameState.playerTable[3] || '';
 	document.getElementById('total').innerHTML = gameState.total;
 	document.getElementById('wins').innerHTML = playerSettings.playerWins;
 	document.getElementById('losses').innerHTML = playerSettings.playerLosses;
@@ -244,11 +283,11 @@ function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
 	//check to see if player won
 		playerSettings.playerWins += 1;
-		alert("You've won " + playerSettings.playerWins + " games");
+		setTimeout(function(){alert("You've won " + playerSettings.playerWins + " games")},400);
 		flag = 1;
 	} else if (gameState.turn >= turnLimit && gameState.total != 20) {
 		playerSettings.playerLosses += 1;
-		alert("You've lost " + playerSettings.playerLosses + " games");
+		setTimeout(function(){alert("You've lost " + playerSettings.playerLosses + " games")},400);
 		flag = 1;
 	} else {
 	// just checking
