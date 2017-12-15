@@ -19,6 +19,11 @@ var PLAYER_LIBRARY = [
 	5, -5,
 	6, -6
 ]
+var PLAYER_SETTINGS = {
+	playerWins: 0,
+	playerLosses: 0,
+	playerGameTotal: 0
+}
 //Fisher-Yates shuffle
 function shuffle(a){
 	a = a.slice(); //creating a copy of the original array
@@ -75,6 +80,7 @@ function playerReset(){
 
 window.onload = buttonReset();
 window.onload = playerReset();
+window.onload = updateDisplay();
 
 function buttonDeal() {
 	gameState = gameController(gameState, 'deal');
@@ -112,10 +118,13 @@ function button4() {
 function updateDisplay() {
 	document.getElementById('display').innerHTML = gameState.playerTable;
 	document.getElementById('total').innerHTML = gameState.total;
+	document.getElementById('wins').innerHTML = playerSettings.playerWins;
+	document.getElementById('losses').innerHTML = playerSettings.playerLosses;
 	document.getElementById('pc0').innerHTML = gameState.playerHand[0];
 	document.getElementById('pc1').innerHTML = gameState.playerHand[1];
 	document.getElementById('pc2').innerHTML = gameState.playerHand[2];
 	document.getElementById('pc3').innerHTML = gameState.playerHand[3];
+	console.log('PlayerSettings ' + playerSettings.playerWins);
 	if (!flag) {
 		document.getElementById('deal').disabled = false;
 	} else {
