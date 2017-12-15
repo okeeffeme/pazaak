@@ -59,7 +59,7 @@ function checkRound(gameState){
 		return 0;
 	}
 }
-var turnLimit = 5; 	// traditional turn limit is 9 - changing to 5 for single player
+var turnLimit = 4; 	// traditional turn limit is 9 - changing to 5 for single player
 
 // model
 // The model is the gamestate
