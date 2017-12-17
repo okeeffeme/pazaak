@@ -96,10 +96,6 @@ function runBot() {
 	//console.log("deal button clicked");
 	updateDisplay();
 }
-function buttonStand() {
-	gameState = gameController(gameState, 'stand');
-	updateDisplay();
-}
 
 function button1() {
 	gameState = gameController(gameState, 'playerAction0');
@@ -171,7 +167,6 @@ function updateDisplay() {
 	document.getElementById('pc1').innerHTML = gameState.playerHand[1];
 	document.getElementById('pc2').innerHTML = gameState.playerHand[2];
 	document.getElementById('pc3').innerHTML = gameState.playerHand[3];
-	console.log('PlayerSettings ' + playerSettings.playerWins);
 	if (!flag) {
 		document.getElementById('deal').disabled = false;
 	} else {
@@ -329,28 +324,46 @@ function gameController(gameState, action) {
 //
 // BOT //
 //
+
+function remainderHand() {
+	return 20 - gameState.total;
+}
+
 function testHand(hand) {
 	for (i = 0; i < hand.length; i++) {
-		if (gameState.total + hand[i] === 20) {
-			console.log(gameState.total + ' + ' + i + " = 20");
-			console.log(i);
+		console.log("HELLO remainder: " + remainderHand() + " | card value: " + hand[i]);
+		if (remainderHand() === hand[i]) {
+			console.log("YES card# " + i);
 			return i;
 		}
 	}
 }
+
+function newTestHand(hand) {
+	if (gameState.turn === turnLimit - 1) {
+		for (i = 0; i < hand.length; i++) {
+			if (remainderHand() === hand[i]) {
+				console.log(gameState.total + ' + ' + hand[i] + " = 20");
+				console.log('remainder: ' + remainderHand() + ' | card value: ' + hand[i]);
+				console.log("card " + i);
+				return i;
+			}
+		}
+	}
+}
+
 function evaluateHand() {
-	if (testHand(gameState.playerHand) < 4) {
-		console.log('running deal from hand');
-		var index = testHand(gameState.playerHand);
-		console.log(index);
-		return 'playerAction'+index;
+	let cardIndex = testHand(gameState.playerHand);
+	if (cardIndex < 4) {
+		console.log('Bot wants to play card from hand');
+		return 'playerAction' + cardIndex;
 	} else {
-		console.log('running deal');
+		console.log('Bot wants new card');
 		return 'deal';
 	}
 }
 function bot() {
-	if (gameState.total < 14) {
+	if (gameState.total < 10) {
 		console.log('bot decides to deal @@@');
 		return gameController(gameState, 'deal');
 	} else {
