@@ -27,11 +27,20 @@ button.playerHand {
 	text-align: center;
 }
 
+.master-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 10px;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
 .grid {
   height: calc(100vw/4);
   min-height: 90px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  /* grid-template-rows: repeat(3, 1fr); */
   grid-column-gap: 10px;
   justify-content: space-between;
   align-items: stretch;
