@@ -339,22 +339,28 @@ function testHand(hand) {
 	}
 }
 
+// function testHand(hand) {
+// 	console.log("Hand is: " + hand);
+// 	return hand.filter(remainderHand);
+// }
+
 function newTestHand(hand) {
 	if (gameState.turn === turnLimit - 1) {
 		for (i = 0; i < hand.length; i++) {
+			console.log("HELLO remainder: " + remainderHand() + " | card value: " + hand[i]);
 			if (remainderHand() === hand[i]) {
-				console.log(gameState.total + ' + ' + hand[i] + " = 20");
-				console.log('remainder: ' + remainderHand() + ' | card value: ' + hand[i]);
-				console.log("card " + i);
+				console.log("YES card# " + i);
 				return i;
 			}
 		}
+	} else if (gameState.turn === turnLimit - 2) {
+
 	}
 }
 
 function evaluateHand() {
 	let cardIndex = testHand(gameState.playerHand);
-	if (cardIndex < 4) {
+	if (cardIndex != null) {
 		console.log('Bot wants to play card from hand');
 		return 'playerAction' + cardIndex;
 	} else {
