@@ -91,12 +91,6 @@ function buttonStand() {
 	updateDisplay();
 }
 
-function buttonEndTurn() {
-	gameState = gameController(gameState, 'endTurn');
-	console.log("endTurn button clicked");
-	updateDisplay();
-}
-
 function runBot() {
 	gameState = bot();
 	//console.log("deal button clicked");
@@ -288,11 +282,6 @@ function playAction(gameState, action){
 		case 'stand': {
 			var newGameState = copyGameState(gameState);
 			newGameState.turn = turnLimit;
-			return newGameState;
-		}
-		case 'endTurn': {
-			var newGameState = copyGameState(gameState);
-			newGameState.turn += 1;
 			return newGameState;
 		}
 	}
