@@ -61,12 +61,14 @@ var turnLimit = 4; 	// traditional turn limit is 9 - changing to 5 for single pl
 var gameState;
 var playerSettings;
 var flag;
+var modal = document.getElementById('modal');
 
 // view
 function buttonReset(){
 	flag = 0; //ugh - still looking at better handling for this
 	gameState = gameController(null, 'init');
 	gameState = gameController(gameState, 'deal');
+	modal.style.display = "none";
 	updateDisplay();
 }
 function playerReset(){
@@ -300,11 +302,17 @@ function checkVictoryCondition(gameState) {
 	if (gameState.total === 20) {
 	//check to see if player won
 		playerSettings.playerWins += 1;
-		setTimeout(function(){alert("You've won " + playerSettings.playerWins + " games")},400);
+		setTimeout( function() {
+			document.getElementById('modal_text').innerHTML = ("You've won " + playerSettings.playerWins + " games");
+			modal.style.display = "block";
+		}, 400 );
 		flag = 1;
 	} else if (gameState.turn >= turnLimit && gameState.total != 20) {
 		playerSettings.playerLosses += 1;
-		setTimeout(function(){alert("You've lost " + playerSettings.playerLosses + " games")},400);
+		setTimeout( function() {
+			document.getElementById('modal_text').innerHTML = ("You've lost " + playerSettings.playerLosses + " games");
+			modal.style.display = "block"; //might need to move this
+		}, 400 );
 		flag = 1;
 	} else {
 	// just checking

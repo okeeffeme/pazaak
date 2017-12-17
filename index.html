@@ -35,8 +35,6 @@
 			<button id="deal" class="action" onclick="buttonDeal();">Deal</button>
       <button id="endTurn" class="action" onclick="buttonEndTurn();">End Turn</button>
       <button id="stand" class="action" onclick="buttonStand();">Stand</button>
-      <button id="reset" class="action" onclick="buttonReset();">New Game</button>
-
       <button id="bot" class="action" onclick="runBot();">Test Bot</button>
 
 
@@ -47,6 +45,12 @@
 			<button id="pc2" class="playerHand" onclick="button3();">Card 3</button>
 			<button id="pc3" class="playerHand" onclick="button4();">Card 4</button>
 		</div>
+    <div id="modal">
+      <div id="modal_content">
+        <div id="modal_text"></div>
+        <button id="reset" class="action" onclick="buttonReset();">New Game</button>
+      </div>
+    </div>
 		<script src="pazaak.js"></script>
 	</body>
 </html>
