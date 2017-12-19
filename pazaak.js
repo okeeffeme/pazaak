@@ -62,6 +62,8 @@ var gameState;
 var playerSettings;
 var flag;
 var modal = document.getElementById('modal');
+var indexedHand = [];
+var possibleSolutions = [];
 
 // view
 function buttonReset(){
@@ -69,6 +71,8 @@ function buttonReset(){
 	gameState = gameController(null, 'init');
 	gameState = gameController(gameState, 'deal');
 	modal.style.display = "none";
+	indexedHand = [];
+	possibleSolutions = [];
 	updateDisplay();
 }
 function playerReset(){
@@ -339,23 +343,55 @@ function testHand(hand) {
 	}
 }
 
-// function testHand(hand) {
-// 	console.log("Hand is: " + hand);
-// 	return hand.filter(remainderHand);
-// }
+function indexHand(x) {
+	gameState.playerHand.map(function(card, index) {
+		var current = [];
+		current[0] = index;
+		current[1] = card;
+		x.push(current);
+	});
+	return x;
+}
 
-function newTestHand(hand) {
-	if (gameState.turn === turnLimit - 1) {
-		for (i = 0; i < hand.length; i++) {
-			console.log("HELLO remainder: " + remainderHand() + " | card value: " + hand[i]);
-			if (remainderHand() === hand[i]) {
-				console.log("YES card# " + i);
-				return i;
+function test(array) {
+	var newArray = array.slice();
+	var comboLength = Math.pow(2, newArray.length);
+	var result = [];
+	for (var i = 0; i < comboLength; i++) {
+		console.log('?? running outer loop');
+		let num = 0;
+		let temp = "";
+		//masking
+		for (var j = 0; j < newArray.length; j++) {
+			if (i & Math.pow(2,j)) {
+				num += array[j][1];
+				temp += array[j][0];
 			}
 		}
-	} else if (gameState.turn === turnLimit - 2) {
-
+		result.push(temp);
+		result.push(num);
+		possibleSolutions.push(result);
+		result = [];
 	}
+	return possibleSolutions;
+}
+
+function newTestHand() {
+	let play;
+	let testA = test(indexedHand);
+	console.log("RUN FOR " + remainderHand() );
+		testA.forEach(function(array) {
+			console.log("TEST " + array[1]);
+			if(remainderHand() == array[1]) {
+				play = true;
+				return play;
+			} else {
+				play = false;
+				return play;
+			}
+		});
+	console.log(play)
+	return play;
 }
 
 function evaluateHand() {
