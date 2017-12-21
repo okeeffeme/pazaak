@@ -63,16 +63,14 @@ var playerSettings;
 var flag;
 var modal = document.getElementById('modal');
 var indexedHand = [];
-var possibleSolutions = [];
 
 // view
 function buttonReset(){
 	flag = 0; //ugh - still looking at better handling for this
 	gameState = gameController(null, 'init');
-	gameState = gameController(gameState, 'deal');
+	gameState = gameController(gameState, 'playerActionDeal');
 	modal.style.display = "none";
-	indexedHand = [];
-	possibleSolutions = [];
+	indexedHand = indexHand();
 	updateDisplay();
 }
 function playerReset(){
@@ -84,7 +82,7 @@ window.onload = playerReset();
 window.onload = updateDisplay();
 
 function buttonDeal() {
-	gameState = gameController(gameState, 'deal');
+	gameState = gameController(gameState, 'playerActionDeal');
 	console.log("deal button clicked");
 	updateDisplay();
 }
@@ -216,7 +214,7 @@ function playAction(gameState, action){
 			return newGameState;
 		}
 // Deals a card from dealerDeck to playerTable and ticks the turn counter by 1
-		case 'deal': {
+		case 'playerActionDeal': {
 			var newGameState = copyGameState(gameState);
 			let card = newGameState.dealerDeck.pop();
 			newGameState.playerTable.push(card);
@@ -330,39 +328,34 @@ function gameController(gameState, action) {
 //
 
 function remainderHand() {
+	console.log(' * running remainderHand');
 	return 20 - gameState.total;
 }
 
-function testHand(hand) {
-	for (i = 0; i < hand.length; i++) {
-		console.log("HELLO remainder: " + remainderHand() + " | card value: " + hand[i]);
-		if (remainderHand() === hand[i]) {
-			console.log("YES card# " + i);
-			return i;
-		}
-	}
-}
-
-function indexHand(x) {
+function indexHand() {
+	console.log(' * running indexHand');
+	let indexedHand = [];
 	gameState.playerHand.map(function(card, index) {
 		var current = [];
 		current[0] = index;
 		current[1] = card;
-		x.push(current);
+		indexedHand.push(current);
 	});
-	return x;
+	return indexedHand;
 }
 
-function test(array) {
+function calcSolutions(array) {
+	console.log(' * running calcSolutions');
+	var possibleSolutions = [];
 	var newArray = array.slice();
 	var comboLength = Math.pow(2, newArray.length);
 	var result = [];
 	for (var i = 0; i < comboLength; i++) {
-		console.log('?? running outer loop');
 		let num = 0;
 		let temp = "";
 		//masking
 		for (var j = 0; j < newArray.length; j++) {
+			//bitwise map
 			if (i & Math.pow(2,j)) {
 				num += array[j][1];
 				temp += array[j][0];
@@ -376,41 +369,67 @@ function test(array) {
 	return possibleSolutions;
 }
 
-function newTestHand() {
-	let play;
-	let testA = test(indexedHand);
-	console.log("RUN FOR " + remainderHand() );
-		testA.forEach(function(array) {
-			console.log("TEST " + array[1]);
-			if(remainderHand() == array[1]) {
-				play = true;
-				return play;
-			} else {
-				play = false;
-				return play;
-			}
-		});
-	console.log(play)
-	return play;
+function evalSolutions() {
+	console.log(' * running evalSolutions');
+	let solutions = [];
+	let x = remainderHand();
+	let testA = calcSolutions(indexedHand);
+	testA.forEach(function(array) {
+		//console.log("TEST remainder: " + x + " move: " + array[1]);
+		if(x === array[1]) {
+			solutions.push(array);
+		}
+	});
+	return solutions;
 }
 
-function evaluateHand() {
-	let cardIndex = testHand(gameState.playerHand);
-	if (cardIndex != null) {
-		console.log('Bot wants to play card from hand');
-		return 'playerAction' + cardIndex;
-	} else {
+function chooseSolution(solutions) {
+
+}
+
+function evalHand() {
+	let turnsLeft = 0;
+	let moves = "";
+	let solutions = evalSolutions();
+	console.log("Solutions: " + solutions);
+	if (moves === "" && solutions.length === 0) {
 		console.log('Bot wants new card');
-		return 'deal';
+		return 'playerActionDeal';
+	} else {
+		turnsLeft = turnLimit - gameState.turn;
+		if (moves === "" && turnsLeft != 0) {
+			for(i=0;i < solutions.length; i++) {
+				if (solutions[i][0].length <= turnsLeft) {
+					moves = solutions[i][0];
+					console.log("Moves: " + moves);
+					let move = moves.slice(-1);
+					moves = moves.slice(0,-1);
+					return 'playerAction' + move;
+				} else {
+					console.log("FAILURE");
+					return "playerActionDeal";
+				}
+			}
+		}
+		console.log('Bot wants to play card from hand');
+		console.log("Moves: " + moves);
+		let move = moves.slice(-1);
+		moves = moves.slice(0,-1);
+		if (!move || move === "") {
+			move = "Deal";
+			return move;
+		}
+		return 'playerAction' + move;
 	}
 }
+
 function bot() {
 	if (gameState.total < 10) {
 		console.log('bot decides to deal @@@');
-		return gameController(gameState, 'deal');
+		return gameController(gameState, 'playerActionDeal');
 	} else {
 		console.log('bot decides to evaluate @@@');
-		var action = evaluateHand();
+		var action = evalHand();
 		console.log('bot will ' + action + " @@@");
 		return gameController(gameState, action);
 	}
