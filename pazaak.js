@@ -19,6 +19,8 @@ var PLAYER_LIBRARY = [
 	5, -5,
 	6, -6
 ]
+var turnLimit = 4; 	// traditional turn limit is 9 - changing to 5 for single player
+var winCondition = 20; //
 //Fisher-Yates shuffle
 function shuffle(a){
 	a = a.slice(); //creating a copy of the original array
@@ -54,7 +56,6 @@ function checkRound(gameState){
 		return 0;
 	}
 }
-var turnLimit = 4; 	// traditional turn limit is 9 - changing to 5 for single player
 
 // model
 // The model is the gamestate
@@ -165,10 +166,10 @@ function updateDisplay() {
 	document.getElementById('total').innerHTML = gameState.total;
 	document.getElementById('wins').innerHTML = playerSettings.playerWins;
 	document.getElementById('losses').innerHTML = playerSettings.playerLosses;
-	document.getElementById('pc0').innerHTML = gameState.playerHand[0];
-	document.getElementById('pc1').innerHTML = gameState.playerHand[1];
-	document.getElementById('pc2').innerHTML = gameState.playerHand[2];
-	document.getElementById('pc3').innerHTML = gameState.playerHand[3];
+	document.getElementById('pc0').innerHTML = gameState.playerHand[0] || 'x';
+	document.getElementById('pc1').innerHTML = gameState.playerHand[1] || 'x';
+	document.getElementById('pc2').innerHTML = gameState.playerHand[2] || 'x';
+	document.getElementById('pc3').innerHTML = gameState.playerHand[3] || 'x';
 	if (!flag) {
 		document.getElementById('deal').disabled = false;
 	} else {
@@ -285,7 +286,7 @@ function playAction(gameState, action){
 }
 
 function checkVictoryCondition(gameState) {
-	if (gameState.total === 20) {
+	if (gameState.total === winCondition) {
 	//check to see if player won
 		playerSettings.playerWins += 1;
 		setTimeout( function() {
@@ -293,7 +294,7 @@ function checkVictoryCondition(gameState) {
 			modal.style.display = "block";
 		}, 400 );
 		flag = 1;
-	} else if (gameState.turn >= turnLimit && gameState.total != 20) {
+	} else if (gameState.turn >= turnLimit && gameState.total != winCondition) {
 		playerSettings.playerLosses += 1;
 		setTimeout( function() {
 			document.getElementById('modal_text').innerHTML = ("You've lost " + playerSettings.playerLosses + " games");
@@ -329,9 +330,10 @@ function gameController(gameState, action) {
 
 function remainderHand() {
 	console.log(' * running remainderHand');
-	return 20 - gameState.total;
+	return winCondition - gameState.total;
 }
 
+//lookup array.indexOf
 function indexHand() {
 	console.log(' * running indexHand');
 	let indexedHand = [];
@@ -381,10 +383,6 @@ function evalSolutions() {
 		}
 	});
 	return solutions;
-}
-
-function chooseSolution(solutions) {
-
 }
 
 function evalHand() {

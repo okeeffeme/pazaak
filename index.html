@@ -13,7 +13,7 @@
   </head>
 	<body>
 		<div>
-      <div class="grid">
+      <div class="grid-4">
           <div class="col">
             <div class="card" id="card_1">1</div>
           </div>
@@ -27,23 +27,39 @@
             <div class="card" id="card_4"></div>
           </div>
       </div>
-			<h1 id="display"></h1>
-			<h2>Total: <span id="total"></span></h2>
-      <p>Wins <span id="wins"></span> | Losses <span id="losses"></span><p>
+      <div>
+  			<h1 id="display"></h1>
+  			<h2>Total: <span id="total"></span></h2>
+        <p>Wins <span id="wins"></span> | Losses <span id="losses"></span><p>
+      </div>
 		</div>
-		<div>
-			<button id="deal" class="action" onclick="buttonDeal();">Deal</button>
-      <button id="stand" class="action" onclick="buttonStand();">Stand</button>
-      <button id="bot" class="action" onclick="runBot();">Test Bot</button>
+      <div class="grid-2">
+
+        <button id="deal" class="action" onclick="buttonDeal();">Deal a Card</button>
+        <!-- <button id="stand" class="action" onclick="buttonStand();">Stand</button> -->
+        <button id="bot" class="action" onclick="runBot();">Run the Bot</button>
+
+      </div>
 
 
-		<div>
-		<div>
-			<button id="pc0" class="playerHand" onclick="button1();">Card 1</button>
-			<button id="pc1" class="playerHand" onclick="button2();">Card 2</button>
-			<button id="pc2" class="playerHand" onclick="button3();">Card 3</button>
-			<button id="pc3" class="playerHand" onclick="button4();">Card 4</button>
-		</div>
+      <div class="grid-4">
+
+        <div class="col" onclick="button1();">
+          <button id="pc0" class="playerHand">Card 1</button>
+        </div>
+        <div class="col"  onclick="button2();">
+          <button id="pc1" class="playerHand">Card 2</button>
+        </div>
+        <div class="col" onclick="button3();">
+          <button id="pc2" class="playerHand">Card 3</button>
+        </div>
+        <div class="col" onclick="button4();">
+          <button id="pc3" class="playerHand">Card 4</button>
+        </div>
+
+  		</div>
+
+
     <div id="modal">
       <div id="modal_content">
         <div id="modal_text"></div>
