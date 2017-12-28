@@ -10,6 +10,7 @@ body {
   margin: 20px auto;
 }
 .tally {
+  -webkit-font-smoothing: antialiased;
   color: white;
 }
 .tally p {
