@@ -166,10 +166,10 @@ function updateDisplay() {
 	document.getElementById('total').innerHTML = gameState.total;
 	document.getElementById('wins').innerHTML = playerSettings.playerWins;
 	document.getElementById('losses').innerHTML = playerSettings.playerLosses;
-	document.getElementById('pc0').innerHTML = gameState.playerHand[0] || 'x';
-	document.getElementById('pc1').innerHTML = gameState.playerHand[1] || 'x';
-	document.getElementById('pc2').innerHTML = gameState.playerHand[2] || 'x';
-	document.getElementById('pc3').innerHTML = gameState.playerHand[3] || 'x';
+	document.getElementById('pc0').innerHTML = gameState.playerHand[0] || '';
+	document.getElementById('pc1').innerHTML = gameState.playerHand[1] || '';
+	document.getElementById('pc2').innerHTML = gameState.playerHand[2] || '';
+	document.getElementById('pc3').innerHTML = gameState.playerHand[3] || '';
 	if (!flag) {
 		document.getElementById('deal').disabled = false;
 	} else {
